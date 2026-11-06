@@ -1,0 +1,202 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// List-like profile sections (experience, education, projects) are stored as JSON
+// strings so the schema works unchanged on SQLite and Postgres. Shapes live in lib/profile.ts.
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+
+  // Resume profile
+  headline        String  @default("")
+  phone           String  @default("")
+  location        String  @default("")
+  linkedin        String  @default("")
+  website         String  @default("")
+  summary         String  @default("")
+  yearsExperience Int     @default(0)
+  skills          String  @default("")
+  experience      String  @default("[]")
+  education       String  @default("[]")
+  projects        String  @default("[]")
+  certifications  String  @default("")
+  // Resume layout id, see lib/resume-templates.ts
+  resumeTemplate  String  @default("modern")
+
+  // Job search preferences. Empty keywords = built from headline and skills.
+  jobKeywords   String    @default("")
+  jobLocation   String    @default("")
+  postedLimit   String    @default("week")
+  postsPerQuery Int       @default(15)
+  jobsOnly      Boolean   @default(false)
+  // Comma-separated: LINKEDIN, NAUKRI, INDEED, FOUNDIT (see lib/sources.ts)
+  jobSources    String    @default("LINKEDIN,NAUKRI,INDEED,FOUNDIT")
+  autoSearch    Boolean   @default(true)
+  // idle · running · error
+  searchStatus    String    @default("idle")
+  searchError     String    @default("")
+  searchStartedAt DateTime?
+  lastSearchAt    DateTime?
+  lastSearchFound Int       @default(0)
+  lastSearchNew   Int       @default(0)
+
+  // Credits, in micro-dollars (1 USD = 1,000,000) so tiny per-result costs add up exactly.
+  // Users spend credits on searches; see lib/pricing.ts for how a search is priced.
+  creditMicros     Int       @default(0)
+  // FREE · PRO
+  plan             String    @default("FREE")
+  // Lemon Squeezy subscription state for PRO: active · past_due · cancelled · expired
+  planStatus       String    @default("")
+  planRenewsAt     DateTime?
+  lsSubscriptionId String?   @unique
+  lsCustomerId     String?
+  lsUpdatedAt      DateTime?
+
+  // Email account (password is encrypted with SESSION_SECRET)
+  smtpHost   String  @default("smtp.gmail.com")
+  smtpPort   Int     @default(587)
+  smtpUser   String  @default("")
+  smtpPass   String  @default("")
+  fromName   String  @default("")
+
+  // Outreach
+  emailSubject String @default("")
+  emailBody    String @default("")
+  dailyLimit   Int    @default(25)
+  minMatch     Int    @default(40)
+  autoSend     Boolean @default(false)
+
+  posts        JobPost[]
+  applications Application[]
+  credits      CreditTransaction[]
+  studyMarks   StudyMark[]
+  questions    StudyQuestion[]
+  mocks        MockInterview[]
+}
+
+model JobPost {
+  id             String        @id @default(cuid())
+  userId         String
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // LINKEDIN · NAUKRI · INDEED · FOUNDIT
+  source         String        @default("LINKEDIN")
+  externalId     String
+  url            String        @default("")
+  // Job boards: the listing's own apply page, company and job facts
+  applyUrl       String        @default("")
+  company        String        @default("")
+  location       String        @default("")
+  experience     String        @default("")
+  salary         String        @default("")
+  content        String
+  authorName     String        @default("")
+  authorHeadline String        @default("")
+  authorUrl      String        @default("")
+  authorAvatar   String        @default("")
+  postedAt       DateTime?
+  jobTitle       String        @default("")
+  emails         String        @default("")
+  phones         String        @default("")
+  matchedSkills  String        @default("")
+  matchScore     Int           @default(0)
+  // NEW · SENT (emailed) · APPLIED (on the job site) · SKIPPED · FAILED
+  status         String        @default("NEW")
+  createdAt      DateTime      @default(now())
+  applications   Application[]
+
+  @@unique([userId, externalId])
+  @@index([userId, status])
+  @@index([userId, matchScore])
+  @@index([userId, source])
+}
+
+model Application {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    String
+  post      JobPost  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  // EMAIL, or the job site applied on (NAUKRI, INDEED, FOUNDIT, LINKEDIN)
+  channel   String   @default("EMAIL")
+  toEmail   String   @default("")
+  subject   String   @default("")
+  body      String   @default("")
+  // SENT · FAILED
+  status    String
+  error     String   @default("")
+  auto      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([userId, toEmail])
+}
+
+// Every change to a user's credit balance. SEARCH rows also record what Apify charged us,
+// so revenue vs. cost can be checked per user.
+model CreditTransaction {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // SIGNUP_BONUS · SUBSCRIPTION · SEARCH · ADJUSTMENT
+  kind            String
+  // Positive adds credit, negative spends it (micro-dollars).
+  amountMicros    Int
+  apifyCostMicros Int      @default(0)
+  description     String
+  // Makes grants idempotent, e.g. "ls-invoice:12345" so a retried webhook pays out once.
+  reference       String?  @unique
+  createdAt       DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+// Interview prep. Built-in questions live in lib/study/bank.ts (ids like "js-1");
+// AI-generated ones are stored per user in StudyQuestion.
+model StudyMark {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId String
+  // KNOWN · REVIEW
+  status     String
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, questionId])
+}
+
+model StudyQuestion {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic     String
+  question  String
+  answer    String
+  // JSON array of key points an answer should cover
+  points    String   @default("[]")
+  level     Int      @default(2)
+  createdAt DateTime @default(now())
+
+  @@index([userId, topic])
+}
+
+model MockInterview {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  score     Int
+  // JSON: [{ questionId, question, answer, score, covered, missed }]
+  results   String
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}

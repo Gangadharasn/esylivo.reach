@@ -1,0 +1,32 @@
+[
+  {
+    "title": "React JS Developer",
+    "logoPathV3": "",
+    "jobId": "051126900101",
+    "currency": "INR",
+    "footerPlaceholderLabel": "2 Days Ago",
+    "companyName": "Brightwave Technologies",
+    "tagsAndSkills": "React.js,JavaScript,Redux,TypeScript,REST API,HTML,CSS",
+    "placeholders": [
+      { "type": "experience", "label": "3-6 Yrs" },
+      { "type": "salary", "label": "8-15 Lacs PA" },
+      { "type": "location", "label": "Bengaluru" }
+    ],
+    "jdURL": "/job-listings-react-js-developer-brightwave-technologies-bengaluru-3-to-6-years-051126900101",
+    "jobDescription": "<p><b>Role:</b> React JS Developer</p><ul><li>Build responsive UIs with React, Redux and TypeScript</li><li>Integrate REST APIs</li></ul><p>Share your resume at <b>talent@brightwave.example</b></p>"
+  },
+  {
+    "title": "Node.js Backend Developer",
+    "jobId": "041126900202",
+    "footerPlaceholderLabel": "Just Now",
+    "companyName": "Ledgerly Fintech",
+    "tagsAndSkills": "Node.js,Express,MongoDB,AWS,Microservices",
+    "placeholders": [
+      { "type": "experience", "label": "2-5 Yrs" },
+      { "type": "salary", "label": "Not disclosed" },
+      { "type": "location", "label": "Hyderabad, Bengaluru" }
+    ],
+    "jdURL": "/job-listings-node-js-backend-developer-ledgerly-fintech-hyderabad-2-to-5-years-041126900202",
+    "jobDescription": "<p>We need a backend engineer to design Node.js microservices on AWS with MongoDB.</p>"
+  }
+]

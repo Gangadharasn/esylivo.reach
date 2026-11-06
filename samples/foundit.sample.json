@@ -1,0 +1,23 @@
+[
+  {
+    "job_id": "70110001",
+    "title": "Senior Software Engineer - React",
+    "company": "Cloudnine Systems",
+    "location": "Bengaluru, India",
+    "experience_min_years": 4,
+    "experience_max_years": 8,
+    "salary_confidential": false,
+    "salary_min_lakhs": 18,
+    "salary_max_lakhs": 28,
+    "employment_type": "Full time",
+    "skills": ["React", "TypeScript", "GraphQL", "Jest"],
+    "posted_date_text": "1 day ago",
+    "posted_days_ago": 1,
+    "apply_url": "https://www.foundit.in/job/senior-software-engineer-react-cloudnine-systems-bengaluru-70110001"
+  },
+  {
+    "_type": "summary",
+    "keywords_searched": ["react developer"],
+    "jobs_scraped": 1
+  }
+]

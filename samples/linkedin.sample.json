@@ -1,0 +1,50 @@
+[
+  {
+    "type": "post",
+    "id": "7390000000000000001",
+    "linkedinUrl": "https://www.linkedin.com/posts/sample-1",
+    "content": "We're hiring a Senior React Developer in Bengaluru (Hybrid)!\n\nExperience: 4-7 years\nSkills: React, TypeScript, Redux, Node.js, REST APIs, AWS\nNotice: Immediate to 30 days\n\nInterested candidates can share their resume at priya.hr@techcorp.example or WhatsApp 98450 12345.\n#hiring #reactjs #bangalorejobs",
+    "author": { "name": "Priya Sharma", "info": "Talent Acquisition Lead at TechCorp", "linkedinUrl": "https://www.linkedin.com/in/sample-priya", "avatar": null },
+    "postedAt": { "date": "2026-11-05T09:12:00.000Z" }
+  },
+  {
+    "type": "post",
+    "id": "7390000000000000002",
+    "linkedinUrl": "https://www.linkedin.com/posts/sample-2",
+    "content": "Urgent requirement for Node.js Backend Engineer (Remote)\n\n- 3+ years with Node.js, Express.js, MongoDB, Docker\n- Good to have: Kubernetes, GraphQL\n\nSend your CV to careers@finly.example with subject 'Node Backend'. Call +91 99860 11223 for queries.",
+    "author": { "name": "Arjun Mehta", "info": "Engineering Manager at Finly", "linkedinUrl": "https://www.linkedin.com/in/sample-arjun", "avatar": null },
+    "postedAt": { "date": "2026-11-04T15:40:00.000Z" }
+  },
+  {
+    "type": "post",
+    "id": "7390000000000000003",
+    "linkedinUrl": "https://www.linkedin.com/posts/sample-3",
+    "content": "Hiring Full Stack Developer (MERN) for our Pune office. Role: Full Stack Developer\nMust have: MongoDB, Express, React, Node.js, JavaScript, Git.\nFreshers with strong projects can apply too. Mail: neha.gupta@cloudnest.example",
+    "author": { "name": "Neha Gupta", "info": "HR Manager · CloudNest", "linkedinUrl": "https://www.linkedin.com/in/sample-neha", "avatar": null },
+    "postedAt": { "date": "2026-11-03T11:05:00.000Z" }
+  },
+  {
+    "type": "post",
+    "id": "7390000000000000004",
+    "linkedinUrl": "https://www.linkedin.com/posts/sample-4",
+    "content": "We are looking for a Data Analyst with Python, SQL, Power BI and Tableau experience. 2-4 years. Location: Hyderabad. DM me or apply through the link in comments.",
+    "author": { "name": "Rohit Verma", "info": "Analytics Head at DataWise", "linkedinUrl": "https://www.linkedin.com/in/sample-rohit", "avatar": null },
+    "postedAt": { "date": "2026-11-02T08:30:00.000Z" }
+  },
+  {
+    "type": "post",
+    "id": "7390000000000000005",
+    "linkedinUrl": "https://www.linkedin.com/posts/sample-5",
+    "content": "#Hiring Next.js Developer | Chennai | 2-5 yrs\nStack: Next.js, React, TypeScript, Tailwind CSS, PostgreSQL, Prisma\nShare profiles: jobs@pixelcraft.example | 044-4567-8901",
+    "author": { "name": "Kavya Iyer", "info": "Founder, PixelCraft Studio", "linkedinUrl": "https://www.linkedin.com/in/sample-kavya", "avatar": null },
+    "postedAt": { "date": "2026-11-05T18:20:00.000Z" }
+  },
+  {
+    "type": "post",
+    "id": "7390000000000000006",
+    "linkedinUrl": "https://www.linkedin.com/posts/sample-6",
+    "content": "Looking for an Automation Testing Engineer with Selenium, Java and Cypress. Bangalore, 3+ years. Send resumes to qa.hiring@testlabs.example",
+    "author": { "name": "Sanjay Rao", "info": "QA Director at TestLabs", "linkedinUrl": "https://www.linkedin.com/in/sample-sanjay", "avatar": null },
+    "postedAt": { "date": "2026-11-01T10:00:00.000Z" }
+  }
+]
