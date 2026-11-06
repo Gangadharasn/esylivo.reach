@@ -1,6 +1,6 @@
 "use client";
 
-import { Briefcase, Coins, GraduationCap, LayoutDashboard, MailCheck, ScanText, Settings, UserRound } from "lucide-react";
+import { Briefcase, GraduationCap, LayoutDashboard, MailCheck, ScanText, UserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -21,13 +21,6 @@ const GROUPS = [
       { href: "/profile", label: "Profile & resume", icon: UserRound },
       { href: "/ats", label: "ATS check", icon: ScanText },
       { href: "/study", label: "Interview prep", icon: GraduationCap },
-    ],
-  },
-  {
-    title: "Account",
-    links: [
-      { href: "/billing", label: "Billing & credits", icon: Coins },
-      { href: "/settings", label: "Settings", icon: Settings },
     ],
   },
 ];

@@ -1,6 +1,6 @@
 "use client";
 
-import { Briefcase, Coins, GraduationCap, LayoutDashboard, LogOut, MailCheck, ScanText, Settings, UserRound } from "lucide-react";
+import { Briefcase, ChevronDown, Coins, GraduationCap, LayoutDashboard, LogOut, MailCheck, ScanText, Settings, UserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -54,8 +54,8 @@ export function BottomNav({ newCount }: { newCount: number }) {
   );
 }
 
-/** Avatar button in the phone top bar: account details, settings and log out. */
-export function UserMenu({ name, email }: { name: string; email: string }) {
+/** Account menu in the top bar: profile, billing, settings and log out. */
+export function UserMenu({ name, email, plan }: { name: string; email: string; plan: string }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -70,15 +70,34 @@ export function UserMenu({ name, email }: { name: string; email: string }) {
 
   return (
     <div ref={ref} className="relative">
-      <button type="button" onClick={() => setOpen(!open)} aria-label="Account menu" aria-expanded={open} className="rounded-full ring-2 ring-brand-100">
-        <Avatar name={name} size={34} />
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        aria-label="Account menu"
+        aria-expanded={open}
+        className="flex items-center gap-2.5 rounded-full p-0.5 transition-colors hover:bg-slate-100 md:rounded-xl md:py-1 md:pl-1 md:pr-2"
+      >
+        <span className="rounded-full ring-2 ring-brand-100">
+          <Avatar name={name} size={34} />
+        </span>
+        <span className="hidden min-w-0 text-left md:block">
+          <span className="block max-w-36 truncate text-sm font-semibold leading-tight text-slate-900">{name}</span>
+          <span className="block text-xs leading-tight text-slate-500">{plan}</span>
+        </span>
+        <ChevronDown className={cn("hidden size-4 text-slate-400 transition-transform md:block", open && "rotate-180")} />
       </button>
       {open ? (
-        <div className="absolute right-0 top-11 z-50 w-64 overflow-hidden rounded-2xl bg-white text-slate-800 shadow-2xl ring-1 ring-slate-200">
-          <div className="border-b border-slate-100 px-4 py-3">
-            <p className="truncate font-medium">{name}</p>
-            <p className="truncate text-xs text-slate-500">{email}</p>
+        <div className="absolute right-0 top-12 z-50 w-64 overflow-hidden rounded-2xl bg-white text-slate-800 shadow-2xl ring-1 ring-slate-200">
+          <div className="flex items-center gap-3 border-b border-slate-100 px-4 py-3">
+            <Avatar name={name} size={38} />
+            <div className="min-w-0">
+              <p className="truncate font-semibold">{name}</p>
+              <p className="truncate text-xs text-slate-500">{email}</p>
+            </div>
           </div>
+          <Link href="/profile" className="flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50">
+            <UserRound className="size-4 text-slate-400" /> Profile & resume
+          </Link>
           <Link href="/applications" className="flex items-center gap-3 px-4 py-3 text-sm hover:bg-slate-50">
             <MailCheck className="size-4 text-slate-400" /> Applications
           </Link>
