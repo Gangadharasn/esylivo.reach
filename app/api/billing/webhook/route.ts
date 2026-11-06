@@ -86,5 +86,5 @@ async function findUser(customUserId: string | null, subscriptionId: string) {
     const user = await prisma.user.findUnique({ where: { id: customUserId } });
     if (user) return user;
   }
-  return subscriptionId ? prisma.user.findUnique({ where: { lsSubscriptionId: subscriptionId } }) : null;
+  return subscriptionId ? prisma.user.findFirst({ where: { lsSubscriptionId: subscriptionId } }) : null;
 }

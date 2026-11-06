@@ -1,5 +1,7 @@
 import "server-only";
 
+import { randomUUID } from "node:crypto";
+
 import { prisma } from "@/lib/prisma";
 import { creditCostMicros, toMicros } from "@/lib/pricing";
 
@@ -14,7 +16,7 @@ export async function grantCredits(userId: string, usd: number, kind: Kind, desc
   const amountMicros = toMicros(usd);
   try {
     await prisma.$transaction([
-      prisma.creditTransaction.create({ data: { userId, kind, amountMicros, description, reference } }),
+      prisma.creditTransaction.create({ data: { userId, kind, amountMicros, description, reference: reference ?? `tx:${randomUUID()}` } }),
       prisma.user.update({ where: { id: userId }, data: { creditMicros: { increment: amountMicros } } }),
     ]);
     return true;
@@ -31,7 +33,7 @@ export async function chargeSearch(userId: string, apifyUsd: number, description
   if (amountMicros <= 0) return 0;
   await prisma.$transaction([
     prisma.creditTransaction.create({
-      data: { userId, kind: "SEARCH", amountMicros: -amountMicros, apifyCostMicros: toMicros(apifyUsd), description },
+      data: { userId, kind: "SEARCH", amountMicros: -amountMicros, apifyCostMicros: toMicros(apifyUsd), description, reference: `tx:${randomUUID()}` },
     }),
     prisma.user.update({ where: { id: userId }, data: { creditMicros: { decrement: amountMicros } } }),
   ]);

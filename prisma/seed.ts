@@ -1,5 +1,6 @@
 // Demo account with an illustrative profile and sample jobs from each job site (made-up people, companies and
 // .example email domains, so nothing real gets emailed). `npm run db:seed` resets it.
+import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 
 import { PrismaClient } from "@prisma/client";
@@ -58,7 +59,7 @@ async function main() {
       jobKeywords: "react developer\nnext.js developer\nfull stack developer",
       jobLocation: "Bengaluru",
       creditMicros: 2_000_000,
-      credits: { create: { kind: "SIGNUP_BONUS", amountMicros: 2_000_000, description: "Welcome credit" } },
+      credits: { create: { kind: "SIGNUP_BONUS", amountMicros: 2_000_000, description: "Welcome credit", reference: `tx:${randomUUID()}` } },
     },
   });
 

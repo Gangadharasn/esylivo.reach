@@ -67,7 +67,7 @@ export default async function JobsPage({ searchParams }: { searchParams: Promise
       ...contactWhere,
       ...(source !== "any" ? { source } : {}),
       matchScore: { gte: minScore },
-      ...(query ? { OR: [{ content: { contains: query } }, { authorName: { contains: query } }, { jobTitle: { contains: query } }] } : {}),
+      ...(query ? { OR: (["content", "authorName", "jobTitle", "company"] as const).map((f) => ({ [f]: { contains: query, mode: "insensitive" as const } })) } : {}),
     },
     orderBy: [{ matchScore: "desc" }, { postedAt: "desc" }],
     take: 300,

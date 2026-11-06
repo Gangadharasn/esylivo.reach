@@ -3,14 +3,19 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
+// MongoDB (Atlas, a replica set: transactions need one). Ids are cuid strings stored as _id.
 // List-like profile sections (experience, education, projects) are stored as JSON
-// strings so the schema works unchanged on SQLite and Postgres. Shapes live in lib/profile.ts.
+// strings. Shapes live in lib/profile.ts.
+//
+// MongoDB unique indexes allow only ONE document with a null/missing value, so no optional
+// field here is @unique: lsSubscriptionId is a plain index and CreditTransaction.reference
+// is always set (lib/credits.ts fills a random one when there is no idempotency key).
 model User {
-  id           String   @id @default(cuid())
+  id           String   @id @default(cuid()) @map("_id")
   email        String   @unique
   passwordHash String
   name         String
@@ -57,7 +62,7 @@ model User {
   // Lemon Squeezy subscription state for PRO: active · past_due · cancelled · expired
   planStatus       String    @default("")
   planRenewsAt     DateTime?
-  lsSubscriptionId String?   @unique
+  lsSubscriptionId String?
   lsCustomerId     String?
   lsUpdatedAt      DateTime?
 
@@ -81,10 +86,12 @@ model User {
   studyMarks   StudyMark[]
   questions    StudyQuestion[]
   mocks        MockInterview[]
+
+  @@index([lsSubscriptionId])
 }
 
 model JobPost {
-  id             String        @id @default(cuid())
+  id             String        @id @default(cuid()) @map("_id")
   userId         String
   user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   // LINKEDIN · NAUKRI · INDEED · FOUNDIT
@@ -120,7 +127,7 @@ model JobPost {
 }
 
 model Application {
-  id        String   @id @default(cuid())
+  id        String   @id @default(cuid()) @map("_id")
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   postId    String
@@ -143,7 +150,7 @@ model Application {
 // Every change to a user's credit balance. SEARCH rows also record what Apify charged us,
 // so revenue vs. cost can be checked per user.
 model CreditTransaction {
-  id              String   @id @default(cuid())
+  id              String   @id @default(cuid()) @map("_id")
   userId          String
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   // SIGNUP_BONUS · SUBSCRIPTION · SEARCH · ADJUSTMENT
@@ -153,7 +160,8 @@ model CreditTransaction {
   apifyCostMicros Int      @default(0)
   description     String
   // Makes grants idempotent, e.g. "ls-invoice:12345" so a retried webhook pays out once.
-  reference       String?  @unique
+  // Rows without such a key get a random "tx:<uuid>" (see the note at the top).
+  reference       String   @unique
   createdAt       DateTime @default(now())
 
   @@index([userId, createdAt])
@@ -162,7 +170,7 @@ model CreditTransaction {
 // Interview prep. Built-in questions live in lib/study/bank.ts (ids like "js-1");
 // AI-generated ones are stored per user in StudyQuestion.
 model StudyMark {
-  id         String   @id @default(cuid())
+  id         String   @id @default(cuid()) @map("_id")
   userId     String
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   questionId String
@@ -174,7 +182,7 @@ model StudyMark {
 }
 
 model StudyQuestion {
-  id        String   @id @default(cuid())
+  id        String   @id @default(cuid()) @map("_id")
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   topic     String
@@ -189,7 +197,7 @@ model StudyQuestion {
 }
 
 model MockInterview {
-  id        String   @id @default(cuid())
+  id        String   @id @default(cuid()) @map("_id")
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title     String
